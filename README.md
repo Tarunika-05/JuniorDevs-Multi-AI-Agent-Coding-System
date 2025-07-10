@@ -64,6 +64,7 @@ Validates correctness, edge cases, and logical soundness.
 - **Python** – Execution environment & orchestration logic
 - **LangChain + LangSmith** – LLM orchestration & traceability
 - **Azure OpenAI** – Secure, scalable LLM backend
+- **Stream** – Frontend/UI to input natural language prompts
 
 ---
 
