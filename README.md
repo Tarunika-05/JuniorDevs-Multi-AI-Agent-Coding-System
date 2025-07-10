@@ -42,8 +42,8 @@ Validates correctness, edge cases, and logical soundness.
 
 ## 🔁 Retry Strategy
 
-- ❌ If output is **errored** → the **Engineer** rewrites the code.
-- ⚠️ If logic is **flawed** → the **Verifier** requests improvements.
+- ❌ If output is **errored** → the **Critic** finds reason for error -> **Engineer** rewrites the code.
+- ⚠️ If logic is **flawed** → the **Verifier** requests improvements -> **Engineer** rewrites the code.
 - ⛔ After **3 attempts** → the user is prompted to clarify the input.
 
 ---
@@ -64,7 +64,6 @@ Validates correctness, edge cases, and logical soundness.
 - **Python** – Execution environment & orchestration logic
 - **LangChain + LangSmith** – LLM orchestration & traceability
 - **Azure OpenAI** – Secure, scalable LLM backend
-- **dotenv** – Secure environment config management
 
 ---
 
