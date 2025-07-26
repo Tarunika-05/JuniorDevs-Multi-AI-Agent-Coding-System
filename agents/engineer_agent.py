@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 import os
 import ast
 import re
+import json
 load_dotenv()
 
 class EngineerAgent:
@@ -57,10 +58,12 @@ Make sure the 'code' field includes line breaks and correct indentation, enclose
         response = self.llm.invoke(messages)
         content = response.content.strip()
 
-        cleaned_content = re.sub(r"^```(json)?\n?|```$", "", content.strip())
-
-        try:
-            result = json.loads(cleaned_content)
-            return result
-        except Exception as e:
-            raise ValueError(f"EngineerAgent: Failed to parse response: {response.content.strip()}") from e
+        
+    try:
+        result = json.loads(content)
+        # Remove backticks from the "code" field after parsing
+        if "code" in result:
+            result["code"] = re.sub(r"^```(?:python)?\n?|```$", "", result["code"].strip())
+        return result
+    except Exception as e:
+        raise ValueError(f"EngineerAgent: Failed to parse response: {response.content.strip()}") from e
