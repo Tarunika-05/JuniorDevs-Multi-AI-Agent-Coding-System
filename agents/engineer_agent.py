@@ -20,52 +20,51 @@ class EngineerAgent:
             max_tokens=800,
         )
 
+    def extract_code_block(self, text: str) -> str:
+        """Extracts code from a markdown-style code block."""
+        match = re.search(r"```(?:\w+)?\n(.*?)```", text, re.DOTALL)
+        return match.group(1).strip() if match else text.strip()
+
     def generate_code(self, task: str, previous_code: str = None, feedback: str = None) -> dict:
-        messages = [
-            SystemMessage(
-                content="""
-You are a helpful and structured code generator.
+        system_prompt = """
+You are a structured code generator.
 
 Determine the programming language based on the user's task.
-Ensure the code you generate is in that language.
-
-When you respond, return **only JSON** in this format:
+Return ONLY a JSON object in this format:
 
 {
   "language": "<programming language>",
-  "code": "```<language>\\n<valid multiline code here>\\n```",
-  "sample_input": "..."
+  "code": "<multiline code>",
+  "sample_input": "<example input>"
 }
 
-Make sure:
-- The 'language' field reflects the actual programming language used (e.g., 'python', 'java', 'cpp').
-- The 'code' field is a properly formatted code block with correct line breaks and indentation, enclosed in triple backticks.
-- No explanation or extra text is added outside the JSON.
+DO NOT use triple backticks or markdown formatting in any field.
+DO NOT include explanations or extra text outside the JSON.
 """
-            )
-        ]
+
+        messages = [SystemMessage(content=system_prompt)]
 
         if previous_code and feedback:
             messages.append(HumanMessage(content=(
-                f"You previously wrote this code:\n{previous_code}\n\n"
-                f"However, the following feedback was given:\n{feedback}\n\n"
-                "Please revise the code to address the issue and return the improved version "
-                "in the format described above."
+                f"Here is the previous code:\n{previous_code}\n\n"
+                f"Feedback:\n{feedback}\n\n"
+                "Revise the code based on feedback and return updated JSON as described."
             )))
         else:
             messages.append(HumanMessage(content=(
                 f"Write code to solve this task:\n{task}\n"
-                "Do not include test input/output. Return the answer as a dictionary as described above."
+                "Return only the JSON object in the format described."
             )))
 
         response = self.llm.invoke(messages)
         content = response.content.strip()
 
         try:
+            # If model returns triple backticks anyway, clean them
+            if content.startswith("```"):
+                content = self.extract_code_block(content)
+
             result = json.loads(content)
-            if "code" in result:
-                # Remove backticks from beginning and end
-                result["code"] = re.sub(r"^```(?:python)?\n?|```$", "", result["code"].strip())
             return result
         except Exception as e:
-            raise ValueError(f"EngineerAgent: Failed to parse response: {content}") from e
+            raise ValueError(f"EngineerAgent: Failed to parse LLM response:\n{content}") from e
