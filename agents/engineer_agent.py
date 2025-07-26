@@ -64,6 +64,6 @@ Make sure the 'code' field includes line breaks and correct indentation, enclose
         # Remove backticks from the "code" field after parsing
         if "code" in result:
             result["code"] = re.sub(r"^```(?:python)?\n?|```$", "", result["code"].strip())
-        return result
+            return result
     except Exception as e:
         raise ValueError(f"EngineerAgent: Failed to parse response: {response.content.strip()}") from e
