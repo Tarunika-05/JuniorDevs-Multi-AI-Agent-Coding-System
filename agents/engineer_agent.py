@@ -26,6 +26,9 @@ class EngineerAgent:
                 content="""
 You are a helpful and structured code generator.
 
+Determine the programming language based on the user's task.
+Ensure the code you generate is in that language.
+
 When you respond, return **only JSON** in this format:
 
 {
@@ -40,7 +43,6 @@ Make sure:
 - No explanation or extra text is added outside the JSON.
 """
             )
-
         ]
 
         if previous_code and feedback:
