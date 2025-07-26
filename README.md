@@ -3,6 +3,7 @@
 > An LLM-powered multi-agent system that writes, runs, critiques, and verifies code — simulating a junior developer’s workflow.
 
 ---
+🌐 Live Demo: https://juniordevs-coding-assistant.streamlit.app/
 
 ## 🚀 What is JuniorDevs?
 
