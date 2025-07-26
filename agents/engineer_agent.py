@@ -29,14 +29,18 @@ You are a helpful and structured code generator.
 When you respond, return **only JSON** in this format:
 
 {
-  "language": "python",
-  "code": "```python\\n<valid multiline code here>\\n```",
+  "language": "<programming language>",
+  "code": "```<language>\\n<valid multiline code here>\\n```",
   "sample_input": "..."
 }
 
-Make sure the 'code' field includes line breaks and correct indentation, enclosed in triple backticks.
+Make sure:
+- The 'language' field reflects the actual programming language used (e.g., 'python', 'java', 'cpp').
+- The 'code' field is a properly formatted code block with correct line breaks and indentation, enclosed in triple backticks.
+- No explanation or extra text is added outside the JSON.
 """
             )
+
         ]
 
         if previous_code and feedback:
