@@ -4,9 +4,9 @@ from langchain_openai import AzureChatOpenAI
 from langchain.schema import HumanMessage, SystemMessage
 from dotenv import load_dotenv
 import os
-import ast
 import re
 import json
+
 load_dotenv()
 
 class EngineerAgent:
@@ -22,8 +22,8 @@ class EngineerAgent:
 
     def generate_code(self, task: str, previous_code: str = None, feedback: str = None) -> dict:
         messages = [
-          SystemMessage(
-    content="""
+            SystemMessage(
+                content="""
 You are a helpful and structured code generator.
 
 When you respond, return **only JSON** in this format:
@@ -36,10 +36,7 @@ When you respond, return **only JSON** in this format:
 
 Make sure the 'code' field includes line breaks and correct indentation, enclosed in triple backticks.
 """
-)
-
-
-
+            )
         ]
 
         if previous_code and feedback:
@@ -58,12 +55,11 @@ Make sure the 'code' field includes line breaks and correct indentation, enclose
         response = self.llm.invoke(messages)
         content = response.content.strip()
 
-        
-    try:
-        result = json.loads(content)
-        # Remove backticks from the "code" field after parsing
-        if "code" in result:
-            result["code"] = re.sub(r"^```(?:python)?\n?|```$", "", result["code"].strip())
+        try:
+            result = json.loads(content)
+            if "code" in result:
+                # Remove backticks from beginning and end
+                result["code"] = re.sub(r"^```(?:python)?\n?|```$", "", result["code"].strip())
             return result
-    except Exception as e:
-        raise ValueError(f"EngineerAgent: Failed to parse response: {response.content.strip()}") from e
+        except Exception as e:
+            raise ValueError(f"EngineerAgent: Failed to parse response: {content}") from e
