@@ -1,7 +1,8 @@
 # agents/engineer_agent.py
 
 from langchain_openai import AzureChatOpenAI
-from langchain.schema import HumanMessage, SystemMessage
+from langchain_core.messages import HumanMessage, SystemMessage
+
 from dotenv import load_dotenv
 import os
 import re
