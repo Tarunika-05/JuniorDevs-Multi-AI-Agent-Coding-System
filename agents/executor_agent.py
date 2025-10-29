@@ -4,7 +4,7 @@ import os
 import requests
 import base64
 from dotenv import load_dotenv
-from langchain.schema import SystemMessage, HumanMessage
+from langchain_core.messages import SystemMessage, HumanMessage
 from langchain_openai import AzureChatOpenAI
 
 load_dotenv()
